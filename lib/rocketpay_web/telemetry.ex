@@ -31,27 +31,11 @@ defmodule RocketpayWeb.Telemetry do
       ),
 
       # Database Metrics
-      summary("rocketpay.repo.query.total_time",
-        unit: {:native, :millisecond},
-        description: "The sum of the other measurements"
-      ),
-      summary("rocketpay.repo.query.decode_time",
-        unit: {:native, :millisecond},
-        description: "The time spent decoding the data received from the database"
-      ),
-      summary("rocketpay.repo.query.query_time",
-        unit: {:native, :millisecond},
-        description: "The time spent executing the query"
-      ),
-      summary("rocketpay.repo.query.queue_time",
-        unit: {:native, :millisecond},
-        description: "The time spent waiting for a database connection"
-      ),
-      summary("rocketpay.repo.query.idle_time",
-        unit: {:native, :millisecond},
-        description:
-          "The time the connection spent waiting before being checked out for the query"
-      ),
+      summary("rocketpay.repo.query.total_time", unit: {:native, :millisecond}),
+      summary("rocketpay.repo.query.decode_time", unit: {:native, :millisecond}),
+      summary("rocketpay.repo.query.query_time", unit: {:native, :millisecond}),
+      summary("rocketpay.repo.query.queue_time", unit: {:native, :millisecond}),
+      summary("rocketpay.repo.query.idle_time", unit: {:native, :millisecond}),
 
       # VM Metrics
       summary("vm.memory.total", unit: {:byte, :kilobyte}),

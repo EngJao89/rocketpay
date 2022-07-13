@@ -1,12 +1,30 @@
 defmodule RocketpayWeb.Router do
   use RocketpayWeb, :router
 
+  import Plug.BasicAuth
+
   pipeline :api do
     plug :accepts, ["json"]
   end
 
+  pipeline :auth do
+    plug :basic_auth, Application.compile_env(:rocketpay, :basic_auth)
+  end
+
   scope "/api", RocketpayWeb do
     pipe_through :api
+
+    get "/:filename", WelcomeController, :index
+
+    post "/users", UsersController, :create
+  end
+
+  scope "/api", RocketpayWeb do
+    pipe_through [:api, :auth]
+
+    post "/accounts/:id/deposit", AccountsController, :deposit
+    post "/accounts/:id/withdraw", AccountsController, :withdraw
+    post "/accounts/transaction", AccountsController, :transaction
   end
 
   # Enables LiveDashboard only for development
@@ -21,20 +39,7 @@ defmodule RocketpayWeb.Router do
 
     scope "/" do
       pipe_through [:fetch_session, :protect_from_forgery]
-
       live_dashboard "/dashboard", metrics: RocketpayWeb.Telemetry
-    end
-  end
-
-  # Enables the Swoosh mailbox preview in development.
-  #
-  # Note that preview only shows emails that were sent by the same
-  # node running the Phoenix server.
-  if Mix.env() == :dev do
-    scope "/dev" do
-      pipe_through [:fetch_session, :protect_from_forgery]
-
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
 end
